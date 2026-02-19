@@ -9,6 +9,7 @@ import {
   HiOutlineChartBar,
   HiOutlineGlobeAlt,
 } from "react-icons/hi2";
+import {authClient} from "@/lib/auth-client";
 
 const FAQS = [
   {
@@ -39,13 +40,13 @@ const INFO = [
     icon: <HiOutlineChartBar />,
     val: "50k+",
     label: "Clicks Tracked",
-    col: "text-secondary",
+    col: "text-primary",
   },
   {
     icon: <HiOutlineGlobeAlt />,
     val: "120+",
     label: "Countries",
-    col: "text-accent",
+    col: "text-primary",
   },
 ];
 
@@ -53,22 +54,25 @@ export default function LandingPage() {
   const [longUrl, setLongUrl] = useState("");
   const router = useRouter();
 
+  const {data: session, isPending} = authClient.useSession();
+
   const handleShorten = (e) => {
     e.preventDefault();
+
+    if (longUrl && !session) router.push(`/login?createNew=${longUrl}`);
+    if (longUrl && session) router.push(`/dashboard?createNew=${longUrl}`);
   };
 
   return (
     <div className="flex flex-col items-center px-6 py-12 max-w-5xl mx-auto w-full space-y-20">
       <div className="text-center space-y-6">
-        {/* <div className="badge badge-primary badge-outline gap-2 py-4 px-6 rounded-full font-bold text-xs uppercase tracking-widest">
+        <div className="badge badge-primary badge-outline gap-2 py-4 px-6 rounded-full font-bold text-xs uppercase tracking-widest">
           <HiSparkles /> Free & Unlimited
-        </div> */}
+        </div>
 
         <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[1.1]">
           Your links, <br />
-          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            only smarter.
-          </span>
+          <span className="text-primary">only smarter.</span>
         </h1>
 
         <p className="max-w-2xl mx-auto text-base-content/60 text-lg md:text-xl">
@@ -99,7 +103,7 @@ export default function LandingPage() {
         </form>
       </div>
 
-      {/* 3. STATS GRID (Alternative to Banner Image) */}
+      {/* 3. STATS GRID */}
       <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
         {INFO.map((stat, i) => (
           <div
@@ -115,7 +119,7 @@ export default function LandingPage() {
         ))}
       </div>
 
-      {/* 4. FAQ (Daisy UI Accordion) */}
+      {/* 4. FAQ */}
       <div className="w-full max-w-3xl space-y-4">
         <h3 className="text-2xl font-black text-center mb-8">
           Common Questions
@@ -123,7 +127,7 @@ export default function LandingPage() {
         {FAQS.map((faq) => (
           <div
             key={faq.v}
-            className="collapse collapse-arrow bg-base-200/50 border border-base-300 rounded-lg"
+            className="collapse collapse-arrow bg-base-200/70 border border-base-300 rounded-lg"
           >
             <input type="checkbox" name="my-accordion-2" />
             <div className="collapse-title text-lg font-bold">{faq.q}</div>

@@ -1,9 +1,10 @@
 "use client";
 
+import {useAuthRedirect, useLoggedIn} from "@/hooks/useAuthRedirect";
 import {authClient} from "@/lib/auth-client";
 import Link from "next/link";
-import {redirect} from "next/navigation";
-import {useState} from "react";
+import {redirect, useRouter, useSearchParams} from "next/navigation";
+import {useEffect, useState} from "react";
 import toast from "react-hot-toast";
 import {
   HiOutlineMail,
@@ -15,7 +16,18 @@ export default function LoginPage() {
   const [formData, setformData] = useState({email: "", password: ""});
   const [loading, setLoading] = useState(false);
 
-  console.log(formData);
+  const router = useRouter();
+  const {data: session, isPending} = authClient.useSession();
+  const longLink = useSearchParams().get("createNew");
+
+  useEffect(() => {
+    if (!isPending && session) {
+      const target = longLink
+        ? `/dashboard?createNew=${encodeURIComponent(longLink)}`
+        : "/dashboard";
+      router.push(target);
+    }
+  }, [session, isPending, longLink, router]);
 
   const handleChange = (e) => {
     setformData({...formData, [e.target.name]: e.target.value});
@@ -31,7 +43,7 @@ export default function LoginPage() {
       onSuccess: (ctx) => {
         setLoading(false);
         toast.success("Welcome! You are logged in successfully.");
-        redirect("/dashboard");
+        router.push(`/dashboard?${longLink ? `createNew=${longLink}` : ""}`);
       },
       onError: (ctx) => {
         setLoading(false);

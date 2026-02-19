@@ -1,12 +1,29 @@
 "use client";
+import {authClient} from "@/lib/auth-client";
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+
+import toast from "react-hot-toast";
 import {BiLink, BiLogOut} from "react-icons/bi";
 
 const UserDropDown = ({user}) => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const data = await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast.error("You are logged out.");
+          router.push("/login");
+        },
+      },
+    });
+  };
+
   return (
     <div className="dropdown dropdown-end">
-      {/* Trigger: Avatar */}
+      {/* Avatar */}
       <div
         tabIndex={0}
         role="button"
@@ -30,8 +47,8 @@ const UserDropDown = ({user}) => {
 
       {/* Content: Menu */}
       <ul
-        tabIndex={0}
-        className="dropdown-content menu p-2 shadow-xl bg-base-200 border border-base-300 rounded-2xl w-52 mt-4 z-50 animate-in fade-in slide-in-from-top-2"
+        tabIndex={-1}
+        className="dropdown-content menu p-2 shadow-xl bg-base-200 border border-base-300 rounded-xl w-52 mt-4 z-50 animate-in fade-in slide-in-from-top-2"
       >
         {/* Label */}
         <li className="menu-title text-base-content/50 px-4 py-2 text-xs font-bold uppercase tracking-wider">
@@ -50,7 +67,10 @@ const UserDropDown = ({user}) => {
 
         {/* Logout Button */}
         <li>
-          <button className="text-error hover:bg-error/10 flex items-center gap-3 py-3">
+          <button
+            className="text-error hover:bg-error/10 flex items-center gap-3 py-3"
+            onClick={handleLogout}
+          >
             <BiLogOut className="h-4 w-4" />
             Logout
           </button>

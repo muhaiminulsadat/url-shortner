@@ -1,11 +1,11 @@
+"use client";
 import Link from "next/link";
 import Logo from "./utils/Logo";
 import UserDropDown from "./utils/UserDropDown";
 import {authClient} from "@/lib/auth-client";
-import {getCurrentUser} from "@/lib/auth";
 
-const Navbar = async () => {
-  const user = await getCurrentUser();
+const Navbar = () => {
+  const {data: session, isPending} = authClient.useSession();
   return (
     <div className="navbar px-10 py-4 bg-base-200/30 shadow sticky top-0 z-50">
       <div className="navbar-start">
@@ -13,7 +13,7 @@ const Navbar = async () => {
       </div>
 
       <div className="navbar-end">
-        {!user ? (
+        {!session?.user ? (
           <>
             {/* Not logged in */}
             <button className="btn btn-primary">
@@ -23,7 +23,7 @@ const Navbar = async () => {
         ) : (
           // logged in
           <>
-            <UserDropDown user={user} />
+            <UserDropDown user={session?.user} />
           </>
         )}
       </div>

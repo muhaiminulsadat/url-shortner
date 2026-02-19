@@ -1,5 +1,6 @@
 "use client";
 
+import {useAuthRedirect, useLoggedIn} from "@/hooks/useAuthRedirect";
 import {authClient} from "@/lib/auth-client";
 import Link from "next/link";
 import {redirect} from "next/navigation";
@@ -14,6 +15,8 @@ import {
 export default function RegisterPage() {
   const [formData, setformData] = useState({name: "", email: "", password: ""});
   const [loading, setLoading] = useState(false);
+
+  useLoggedIn();
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -39,7 +39,7 @@ export async function getCurrentUser() {
     headers: await headers(),
   });
 
-  return result.user;
+  return result?.user;
 }
 
 export async function signOut() {
