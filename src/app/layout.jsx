@@ -21,9 +21,9 @@ export const metadata = {
 
 export default function RootLayout({children}) {
   return (
-    <html lang="en" data-theme="halloween">
+    <html lang="en" data-theme="halloween" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased  min-h-screen`}
       >
         <Navbar />
         {children}

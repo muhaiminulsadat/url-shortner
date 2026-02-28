@@ -16,7 +16,6 @@ export function useLoggedIn() {
   return {session, isPending};
 }
 
-
 export function useNotLoggedIn() {
   const router = useRouter();
   const {data: session, isPending} = authClient.useSession();
