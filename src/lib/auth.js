@@ -20,6 +20,12 @@ export const auth = betterAuth({
     },
   },
 
+  trustedOrigins: [
+    "https://linkchatai.vercel.app",
+    "http://localhost:3000",
+    "*",
+  ],
+
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 1,
